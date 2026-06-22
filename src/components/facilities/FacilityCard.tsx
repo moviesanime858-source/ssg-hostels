@@ -42,10 +42,9 @@ const iconMap: Record<string, React.ReactNode> = {
 
 interface FacilityCardProps {
   facility: FacilityItem;
-  index?: number;
 }
 
-export function FacilityCard({ facility, index = 0 }: FacilityCardProps) {
+export function FacilityCard({ facility }: FacilityCardProps) {
   return (
     <Card className="group overflow-hidden rounded-[2rem] border-0 bg-white shadow-xl shadow-slate-200/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-900/10">
       <CardContent className="flex flex-col items-start gap-4 p-8 relative h-full">

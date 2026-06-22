@@ -7,8 +7,8 @@ interface ContactButtonsProps {
   whatsapp: string;
   whatsappMessage?: string;
   mapsUrl?: string;
-  callVariant?: "default" | "outline" | "secondary" | "primary";
-  whatsappVariant?: "default" | "outline" | "secondary" | "whatsapp";
+  callVariant?: "ghost" | "outline" | "secondary" | "primary";
+  whatsappVariant?: "ghost" | "outline" | "secondary" | "whatsapp";
   layout?: "row" | "stack";
 }
 

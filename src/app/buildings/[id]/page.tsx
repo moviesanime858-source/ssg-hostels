@@ -4,7 +4,6 @@ import { ImageGallery } from "@/components/buildings/ImageGallery";
 import { VacancyBadge } from "@/components/ui/VacancyBadge";
 import { ContactButtons } from "@/components/contact/ContactButtons";
 import { InquiryForm } from "@/components/buildings/InquiryForm";
-import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { fetchBuilding, fetchContact } from "@/lib/data";
 

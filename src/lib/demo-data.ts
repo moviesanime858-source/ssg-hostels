@@ -1,7 +1,5 @@
 import type { Building, ContactInfo, Transport } from "@/types";
 import { DEFAULT_FACILITIES } from "@/types";
-import { getDefaultContact } from "@/lib/utils";
-
 export const DEMO_BUILDINGS: Building[] = [
   {
     id: "demo-1",

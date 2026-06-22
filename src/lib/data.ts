@@ -7,7 +7,6 @@ import {
   getTransport,
 } from "@/lib/firebase/services";
 import {
-  DEMO_BUILDINGS,
   DEMO_CONTACT,
   DEMO_FACILITIES,
   DEMO_TRANSPORT,

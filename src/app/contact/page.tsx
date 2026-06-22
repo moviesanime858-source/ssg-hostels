@@ -1,7 +1,7 @@
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { ContactButtons } from "@/components/contact/ContactButtons";
 import { fetchContact } from "@/lib/data";
-import { getTelUrl, getWhatsAppUrl } from "@/lib/utils";
+import { getTelUrl } from "@/lib/utils";
 
 export const metadata = {
   title: "Contact",
@@ -19,7 +19,7 @@ export default async function ContactPage() {
             Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-500">Touch</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600 leading-relaxed">
-            We're here to help! Reach out for bookings, to schedule a visit, or if you have any questions about our hostel facilities.
+            We&apos;re here to help! Reach out for bookings, to schedule a visit, or if you have any questions about our hostel facilities.
           </p>
         </div>
 

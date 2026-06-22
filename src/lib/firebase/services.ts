@@ -103,6 +103,41 @@ export async function deleteBuilding(id: string): Promise<void> {
   await deleteDoc(doc(getFirebaseDb(), COLLECTIONS.buildings, id));
 }
 
+// ─── Facilities ──────────────────────────────────────────────────────────────
+
+export async function getFacilities(): Promise<FacilityItem[]> {
+  const q = query(collection(getFirebaseDb(), COLLECTIONS.facilities));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((d) => {
+    const data = d.data();
+    return {
+      id: d.id,
+      name: (data.name as string) ?? "",
+      description: (data.description as string) ?? "",
+      icon: (data.icon as string) ?? "default",
+    };
+  });
+}
+
+export async function upsertFacility(
+  id: string | null,
+  data: Omit<FacilityItem, "id">
+): Promise<string> {
+  if (id) {
+    await updateDoc(doc(getFirebaseDb(), COLLECTIONS.facilities, id), data);
+    return id;
+  }
+  const docRef = await addDoc(
+    collection(getFirebaseDb(), COLLECTIONS.facilities),
+    data
+  );
+  return docRef.id;
+}
+
+export async function deleteFacility(id: string): Promise<void> {
+  await deleteDoc(doc(getFirebaseDb(), COLLECTIONS.facilities, id));
+}
+
 // ─── Transport ───────────────────────────────────────────────────────────────
 
 export async function getContact(): Promise<ContactInfo | null> {
