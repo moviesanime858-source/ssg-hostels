@@ -1,0 +1,162 @@
+export type VacancyStatus = "available" | "limited" | "full";
+
+export interface RoomType {
+  name: string;
+  rent: number;
+  description?: string;
+}
+
+export interface FeeItem {
+  label: string;
+  amount: number;
+  note?: string;
+}
+
+export interface Building {
+  id: string;
+  name: string;
+  description: string;
+  images: string[];
+  /** @deprecated Pricing model changed. Fees are no longer tied to specific buildings. */
+  roomTypes: RoomType[];
+  /** @deprecated Pricing model changed. Fees are no longer tied to specific buildings. */
+  feeStructure: FeeItem[];
+  facilities: string[];
+  vacancyStatus: VacancyStatus;
+  distanceFromUniversity: string;
+  googleMapsUrl: string;
+  /** @deprecated Pricing model changed. Fees are no longer tied to specific buildings. */
+  startingRent?: number;
+  createdAt: string;
+}
+
+export interface BuildingInput {
+  name: string;
+  description: string;
+  images: string[];
+  /** @deprecated Pricing model changed. Fees are no longer tied to specific buildings. */
+  roomTypes: RoomType[];
+  /** @deprecated Pricing model changed. Fees are no longer tied to specific buildings. */
+  feeStructure: FeeItem[];
+  facilities: string[];
+  vacancyStatus: VacancyStatus;
+  distanceFromUniversity: string;
+  googleMapsUrl: string;
+  /** @deprecated Pricing model changed. Fees are no longer tied to specific buildings. */
+  startingRent?: number;
+}
+
+export interface PickupPoint {
+  name: string;
+  time: string;
+}
+
+export interface Transport {
+  id: string;
+  autoTimings: string[];
+  pickupPoints: PickupPoint[];
+  charges: FeeItem[];
+  updatedAt: string;
+}
+
+export interface TransportInput {
+  autoTimings: string[];
+  pickupPoints: PickupPoint[];
+  charges: FeeItem[];
+}
+
+export interface FacilityItem {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+}
+
+export interface ContactInfo {
+  id: string;
+  phone: string;
+  whatsapp: string;
+  email?: string;
+  address: string;
+  googleMapsUrl: string;
+  updatedAt: string;
+}
+
+export interface ContactInput {
+  phone: string;
+  whatsapp: string;
+  email?: string;
+  address: string;
+  googleMapsUrl: string;
+}
+
+export const VACANCY_LABELS: Record<VacancyStatus, string> = {
+  available: "Available",
+  limited: "Limited Seats",
+  full: "Full",
+};
+
+export const VACANCY_COLORS: Record<VacancyStatus, string> = {
+  available: "bg-emerald-100 text-emerald-800",
+  limited: "bg-amber-100 text-amber-800",
+  full: "bg-red-100 text-red-800",
+};
+
+export const DEFAULT_FACILITIES: Omit<FacilityItem, "id">[] = [
+  {
+    name: "High-Speed WiFi",
+    description: "Unlimited high-speed internet for study and streaming.",
+    icon: "wifi",
+  },
+  {
+    name: "Laundry",
+    description: "Washing machines and drying area available on-site.",
+    icon: "laundry",
+  },
+  {
+    name: "Food",
+    description: "Nutritious meals served daily with vegetarian options.",
+    icon: "food",
+  },
+  {
+    name: "Hot Water",
+    description: "24/7 hot water supply in all bathrooms.",
+    icon: "hot-water",
+  },
+  {
+    name: "Security",
+    description: "CCTV surveillance and 24-hour security staff.",
+    icon: "security",
+  },
+  {
+    name: "Power Backup",
+    description: "Generator backup ensures uninterrupted power supply.",
+    icon: "power",
+  },
+  {
+    name: "Housekeeping",
+    description: "Regular cleaning and maintenance of rooms and common areas.",
+    icon: "housekeeping",
+  },
+  {
+    name: "Study Room",
+    description: "Dedicated quiet study area for focused learning.",
+    icon: "study",
+  },
+];
+
+export interface Inquiry {
+  id: string;
+  name: string;
+  phone: string;
+  buildingId: string;
+  buildingName: string;
+  createdAt: string;
+}
+
+export interface InquiryInput {
+  name: string;
+  phone: string;
+  buildingId: string;
+  buildingName: string;
+}
