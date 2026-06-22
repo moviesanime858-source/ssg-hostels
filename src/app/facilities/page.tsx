@@ -25,7 +25,7 @@ export default async function FacilitiesPage() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {facilities.map((facility, index) => (
             <div key={facility.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>
-              <FacilityCard facility={facility} index={index} />
+              <FacilityCard facility={facility} />
             </div>
           ))}
         </div>
