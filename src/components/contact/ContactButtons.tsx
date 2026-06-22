@@ -2,46 +2,53 @@ import { Button } from "@/components/ui/Button";
 import { getTelUrl, getWhatsAppUrl } from "@/lib/utils";
 
 interface ContactButtonsProps {
-  phone: string;
+  primaryPhone: string;
+  secondaryPhone?: string;
   whatsapp: string;
   whatsappMessage?: string;
   mapsUrl?: string;
+  callVariant?: "default" | "outline" | "secondary" | "primary";
+  whatsappVariant?: "default" | "outline" | "secondary" | "whatsapp";
   layout?: "row" | "stack";
-  inverted?: boolean;
 }
 
 export function ContactButtons({
-  phone,
+  primaryPhone,
+  secondaryPhone,
   whatsapp,
   whatsappMessage = "Hi, I'm interested in hostel accommodation. Please share more details.",
   mapsUrl,
+  callVariant = "outline",
+  whatsappVariant = "whatsapp",
   layout = "row",
-  inverted = false,
 }: ContactButtonsProps) {
   const containerClass =
     layout === "stack"
       ? "flex flex-col gap-3"
       : "flex flex-wrap gap-3";
 
-  const callVariant = inverted ? "secondary" : "primary";
-  const outlineVariant = inverted ? "secondary" : "outline";
-
   return (
     <div className={containerClass}>
-      <Button href={getTelUrl(phone)} variant={callVariant}>
+      <Button href={getTelUrl(primaryPhone)} variant={callVariant}>
         <PhoneIcon />
-        Call Now
+        Call {primaryPhone}
       </Button>
+      {secondaryPhone && (
+        <Button href={getTelUrl(secondaryPhone)} variant={callVariant}>
+          <PhoneIcon />
+          Call {secondaryPhone}
+        </Button>
+      )}
       <Button
         href={getWhatsAppUrl(whatsapp, whatsappMessage)}
-        variant="whatsapp"
+        variant={whatsappVariant}
         external
       >
         <WhatsAppIcon />
         WhatsApp
       </Button>
       {mapsUrl && (
-        <Button href={mapsUrl} variant={outlineVariant} external>
+        <Button href={mapsUrl} variant={callVariant} external>
           <MapIcon />
           View Directions
         </Button>

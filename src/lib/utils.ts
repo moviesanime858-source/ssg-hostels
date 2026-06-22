@@ -21,11 +21,12 @@ export function getTelUrl(phone: string): string {
 
 export function getDefaultContact() {
   return {
-    phone: process.env.NEXT_PUBLIC_DEFAULT_PHONE ?? "+919949552648",
+    primaryPhone: process.env.NEXT_PUBLIC_DEFAULT_PHONE ?? "+919949552648",
+    secondaryPhone: "",
     whatsapp: process.env.NEXT_PUBLIC_DEFAULT_WHATSAPP ?? "+919949552648",
     email: "",
-    address: "Near VIT-AP",
-    googleMapsUrl: "https://maps.google.com",
+    hostelName: "SSG HOSTELS",
+    inquiryMessageTemplate: "Hi, I would like to inquire about room availability.",
   };
 }
 

@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { getTelUrl, getWhatsAppUrl } from "@/lib/utils";
+import type { ContactInfo } from "@/types";
 
-export function Footer() {
-  const phone = "9949552648";
+export function Footer({ contact }: { contact: ContactInfo }) {
+  const phone = contact.primaryPhone;
+  const whatsappMsg = contact.inquiryMessageTemplate;
 
   return (
     <footer className="border-t border-slate-200 bg-slate-900 text-slate-300">
@@ -11,11 +13,10 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-600 text-sm font-bold text-white">
-                S
+                {contact.hostelName.charAt(0)}
               </span>
               <div className="flex flex-col">
-                <span className="font-bold text-white tracking-wide">SSG HOSTELS</span>
-                <span className="text-xs text-teal-400">Sri Siva Ganesh Boys Hostel</span>
+                <span className="font-bold text-white tracking-wide">{contact.hostelName}</span>
               </div>
             </div>
             <p className="mt-3 text-sm leading-relaxed">
@@ -48,7 +49,7 @@ export function Footer() {
                 📞 +91 {phone}
               </a>
               <a
-                href={getWhatsAppUrl(phone)}
+                href={getWhatsAppUrl(contact.whatsapp, whatsappMsg)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-slate-300 hover:text-white"

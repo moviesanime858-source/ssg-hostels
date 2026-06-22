@@ -7,7 +7,7 @@ export const DEMO_BUILDINGS: Building[] = [
     id: "demo-1",
     name: "Sunrise Hostel Block A",
     description:
-      "Modern PG accommodation with spacious rooms, study areas, and excellent connectivity to the university. Perfect for students seeking a comfortable and secure living environment.",
+      "Modern PG accommodation with spacious rooms and excellent connectivity to the university. Perfect for students seeking a comfortable and secure living environment.",
     images: [
       "https://images.unsplash.com/photo-1555854877-0b037c5d5566?w=800&q=80",
       "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80",
@@ -22,7 +22,7 @@ export const DEMO_BUILDINGS: Building[] = [
       { label: "Maintenance", amount: 500, note: "Monthly" },
       { label: "Registration Fee", amount: 1000, note: "One-time" },
     ],
-    facilities: ["WiFi", "Laundry", "Food", "Hot Water", "Security", "Power Backup"],
+    facilities: ["WiFi", "Laundry", "Food", "Hot Water", "Security"],
     vacancyStatus: "available",
     distanceFromUniversity: "0.5 km",
     googleMapsUrl: "https://maps.google.com",
@@ -33,7 +33,7 @@ export const DEMO_BUILDINGS: Building[] = [
     id: "demo-2",
     name: "Green Valley PG",
     description:
-      "Peaceful hostel surrounded by greenery with premium amenities. Ideal for students who prefer a calm study environment with all modern facilities.",
+      "Peaceful hostel surrounded by greenery with premium amenities. Ideal for students who prefer a calm environment with all modern facilities.",
     images: [
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
       "https://images.unsplash.com/photo-1560448204-e02f11c45748?w=800&q=80",
@@ -46,7 +46,7 @@ export const DEMO_BUILDINGS: Building[] = [
       { label: "Security Deposit", amount: 6000, note: "Refundable" },
       { label: "Maintenance", amount: 600, note: "Monthly" },
     ],
-    facilities: ["WiFi", "Laundry", "Food", "Security", "Study Room"],
+    facilities: ["WiFi", "Laundry", "Food", "Security"],
     vacancyStatus: "limited",
     distanceFromUniversity: "1.2 km",
     googleMapsUrl: "https://maps.google.com",
@@ -70,7 +70,7 @@ export const DEMO_BUILDINGS: Building[] = [
       { label: "Security Deposit", amount: 4000, note: "Refundable" },
       { label: "Maintenance", amount: 400, note: "Monthly" },
     ],
-    facilities: ["WiFi", "Hot Water", "Security", "Power Backup", "Housekeeping"],
+    facilities: ["WiFi", "Hot Water", "Security", "Housekeeping"],
     vacancyStatus: "full",
     distanceFromUniversity: "0.2 km",
     googleMapsUrl: "https://maps.google.com",
@@ -80,17 +80,26 @@ export const DEMO_BUILDINGS: Building[] = [
 ];
 
 export const DEMO_TRANSPORT: Transport = {
-  id: "default",
-  autoTimings: [],
-  pickupPoints: [],
-  charges: [],
+  id: "demo",
+  monthlyMandadam: 800,
+  monthlyInavolu: 500,
+  weeklyMandadam: 250,
+  weeklyInavolu: 150,
+  pickupPgToUniv: "Hostel Mess",
+  pickupUnivToPg: "VIT-AP Main Gate",
+  timingsPgToUniv: ["8:30 AM", "9:00 AM", "9:30 AM", "1:30 PM"],
+  timingsUnivToPg: ["4:00 PM", "5:00 PM", "6:00 PM", "7:30 PM"],
   updatedAt: new Date().toISOString(),
 };
 
 export const DEMO_CONTACT: ContactInfo = {
-  id: "default",
-  ...getDefaultContact(),
-  email: "info@srisivaganeshboyshostel.com",
+  id: "demo",
+  primaryPhone: "+91 99495 52648",
+  secondaryPhone: "+91 98765 43210",
+  whatsapp: "919949552648",
+  email: "contact@ssghostels.com",
+  hostelName: "SSG HOSTELS",
+  inquiryMessageTemplate: "Hi, I would like to inquire about room availability and building details.",
   updatedAt: new Date().toISOString(),
 };
 

@@ -46,23 +46,28 @@ export interface BuildingInput {
   startingRent?: number;
 }
 
-export interface PickupPoint {
-  name: string;
-  time: string;
-}
-
 export interface Transport {
   id: string;
-  autoTimings: string[];
-  pickupPoints: PickupPoint[];
-  charges: FeeItem[];
+  monthlyMandadam: number;
+  monthlyInavolu: number;
+  weeklyMandadam: number;
+  weeklyInavolu: number;
+  pickupPgToUniv: string;
+  pickupUnivToPg: string;
+  timingsPgToUniv: string[];
+  timingsUnivToPg: string[];
   updatedAt: string;
 }
 
 export interface TransportInput {
-  autoTimings: string[];
-  pickupPoints: PickupPoint[];
-  charges: FeeItem[];
+  monthlyMandadam: number;
+  monthlyInavolu: number;
+  weeklyMandadam: number;
+  weeklyInavolu: number;
+  pickupPgToUniv: string;
+  pickupUnivToPg: string;
+  timingsPgToUniv: string[];
+  timingsUnivToPg: string[];
 }
 
 export interface FacilityItem {
@@ -74,20 +79,22 @@ export interface FacilityItem {
 
 export interface ContactInfo {
   id: string;
-  phone: string;
+  primaryPhone: string;
+  secondaryPhone: string;
   whatsapp: string;
-  email?: string;
-  address: string;
-  googleMapsUrl: string;
+  email: string;
+  hostelName: string;
+  inquiryMessageTemplate: string;
   updatedAt: string;
 }
 
 export interface ContactInput {
-  phone: string;
+  primaryPhone: string;
+  secondaryPhone: string;
   whatsapp: string;
-  email?: string;
-  address: string;
-  googleMapsUrl: string;
+  email: string;
+  hostelName: string;
+  inquiryMessageTemplate: string;
 }
 
 export const VACANCY_LABELS: Record<VacancyStatus, string> = {
@@ -129,19 +136,9 @@ export const DEFAULT_FACILITIES: Omit<FacilityItem, "id">[] = [
     icon: "security",
   },
   {
-    name: "Power Backup",
-    description: "Generator backup ensures uninterrupted power supply.",
-    icon: "power",
-  },
-  {
     name: "Housekeeping",
     description: "Regular cleaning and maintenance of rooms and common areas.",
     icon: "housekeeping",
-  },
-  {
-    name: "Study Room",
-    description: "Dedicated quiet study area for focused learning.",
-    icon: "study",
   },
 ];
 

@@ -105,77 +105,49 @@ export async function deleteBuilding(id: string): Promise<void> {
 
 // ─── Transport ───────────────────────────────────────────────────────────────
 
-const TRANSPORT_DOC_ID = "default";
-
-export async function getTransport(): Promise<Transport | null> {
-  const docRef = doc(getFirebaseDb(), COLLECTIONS.transport, TRANSPORT_DOC_ID);
-  const snapshot = await getDoc(docRef);
-  if (!snapshot.exists()) return null;
-  const data = snapshot.data();
-  return {
-    id: snapshot.id,
-    autoTimings: (data.autoTimings as string[]) ?? [],
-    pickupPoints: (data.pickupPoints as Transport["pickupPoints"]) ?? [],
-    charges: (data.charges as Transport["charges"]) ?? [],
-    updatedAt: timestampToISO(data.updatedAt),
-  };
-}
-
-export async function upsertTransport(data: TransportInput): Promise<void> {
-  const docRef = doc(getFirebaseDb(), COLLECTIONS.transport, TRANSPORT_DOC_ID);
-  await setDoc(docRef, { ...data, updatedAt: serverTimestamp() }, { merge: true });
-}
-
-// ─── Facilities ──────────────────────────────────────────────────────────────
-
-export async function getFacilities(): Promise<FacilityItem[]> {
-  const snapshot = await getDocs(collection(getFirebaseDb(), COLLECTIONS.facilities));
-  return snapshot.docs.map((d) => ({
-    id: d.id,
-    name: (d.data().name as string) ?? "",
-    description: (d.data().description as string) ?? "",
-    icon: (d.data().icon as string) ?? "default",
-  }));
-}
-
-export async function upsertFacility(
-  id: string | null,
-  data: Omit<FacilityItem, "id">
-): Promise<string> {
-  if (id) {
-    await updateDoc(doc(getFirebaseDb(), COLLECTIONS.facilities, id), data);
-    return id;
-  }
-  const docRef = await addDoc(collection(getFirebaseDb(), COLLECTIONS.facilities), data);
-  return docRef.id;
-}
-
-export async function deleteFacility(id: string): Promise<void> {
-  await deleteDoc(doc(getFirebaseDb(), COLLECTIONS.facilities, id));
-}
-
-// ─── Contact ─────────────────────────────────────────────────────────────────
-
-const CONTACT_DOC_ID = "default";
-
 export async function getContact(): Promise<ContactInfo | null> {
-  const docRef = doc(getFirebaseDb(), COLLECTIONS.contact, CONTACT_DOC_ID);
+  const docRef = doc(getFirebaseDb(), COLLECTIONS.contact, "default");
   const snapshot = await getDoc(docRef);
   if (!snapshot.exists()) return null;
   const data = snapshot.data();
   return {
     id: snapshot.id,
-    phone: (data.phone as string) ?? "",
+    primaryPhone: (data.primaryPhone as string) ?? "",
+    secondaryPhone: (data.secondaryPhone as string) ?? "",
     whatsapp: (data.whatsapp as string) ?? "",
     email: (data.email as string) ?? "",
-    address: (data.address as string) ?? "",
-    googleMapsUrl: (data.googleMapsUrl as string) ?? "",
+    hostelName: (data.hostelName as string) ?? "",
+    inquiryMessageTemplate: (data.inquiryMessageTemplate as string) ?? "",
     updatedAt: timestampToISO(data.updatedAt),
   };
 }
 
 export async function upsertContact(data: ContactInput): Promise<void> {
-  const docRef = doc(getFirebaseDb(), COLLECTIONS.contact, CONTACT_DOC_ID);
+  const docRef = doc(getFirebaseDb(), COLLECTIONS.contact, "default");
+  await setDoc(docRef, { ...data, updatedAt: serverTimestamp() }, { merge: true });
+}
+
+export async function getTransport(): Promise<Transport | null> {
+  const docRef = doc(getFirebaseDb(), COLLECTIONS.transport, "default");
+  const snapshot = await getDoc(docRef);
+  if (!snapshot.exists()) return null;
+  const data = snapshot.data();
+  return {
+    id: snapshot.id,
+    monthlyMandadam: (data.monthlyMandadam as number) ?? 0,
+    monthlyInavolu: (data.monthlyInavolu as number) ?? 0,
+    weeklyMandadam: (data.weeklyMandadam as number) ?? 0,
+    weeklyInavolu: (data.weeklyInavolu as number) ?? 0,
+    pickupPgToUniv: (data.pickupPgToUniv as string) ?? "",
+    pickupUnivToPg: (data.pickupUnivToPg as string) ?? "",
+    timingsPgToUniv: (data.timingsPgToUniv as string[]) ?? [],
+    timingsUnivToPg: (data.timingsUnivToPg as string[]) ?? [],
+    updatedAt: timestampToISO(data.updatedAt),
+  };
+}
+
+export async function upsertTransport(data: TransportInput): Promise<void> {
+  const docRef = doc(getFirebaseDb(), COLLECTIONS.transport, "default");
   await setDoc(docRef, { ...data, updatedAt: serverTimestamp() }, { merge: true });
 }
 

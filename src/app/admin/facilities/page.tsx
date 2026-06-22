@@ -20,9 +20,7 @@ const ICON_OPTIONS = [
   "food",
   "hot-water",
   "security",
-  "power",
   "housekeeping",
-  "study",
   "default",
 ];
 

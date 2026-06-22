@@ -25,14 +25,11 @@ async function safeFetch<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
 }
 
 export async function fetchBuildings(): Promise<Building[]> {
-  const buildings = await safeFetch(getBuildings, DEMO_BUILDINGS);
-  return buildings.length > 0 ? buildings : DEMO_BUILDINGS;
+  return await safeFetch(getBuildings, []);
 }
 
 export async function fetchBuilding(id: string): Promise<Building | null> {
-  const building = await safeFetch(() => getBuildingById(id), null);
-  if (building) return building;
-  return DEMO_BUILDINGS.find((b) => b.id === id) ?? null;
+  return await safeFetch(() => getBuildingById(id), null);
 }
 
 export async function fetchContact(): Promise<ContactInfo> {

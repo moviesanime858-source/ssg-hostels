@@ -12,9 +12,14 @@ import { ErrorMessage } from "@/components/ui/ErrorMessage";
 
 export default function AdminTransportPage() {
   const [form, setForm] = useState<TransportInput>({
-    autoTimings: [],
-    pickupPoints: [],
-    charges: [],
+    monthlyMandadam: 0,
+    monthlyInavolu: 0,
+    weeklyMandadam: 0,
+    weeklyInavolu: 0,
+    pickupPgToUniv: "",
+    pickupUnivToPg: "",
+    timingsPgToUniv: [""],
+    timingsUnivToPg: [""],
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -25,20 +30,14 @@ export default function AdminTransportPage() {
     setLoading(true);
     try {
       if (!isFirebaseConfigured()) {
-        setForm({
-          autoTimings: DEMO_TRANSPORT.autoTimings,
-          pickupPoints: DEMO_TRANSPORT.pickupPoints,
-          charges: DEMO_TRANSPORT.charges,
-        });
+        setForm({ ...DEMO_TRANSPORT });
         return;
       }
       const data = await getTransport();
       if (data) {
-        setForm({
-          autoTimings: data.autoTimings,
-          pickupPoints: data.pickupPoints,
-          charges: data.charges,
-        });
+        setForm(data);
+      } else {
+        setForm({ ...DEMO_TRANSPORT });
       }
     } catch {
       setError("Failed to load transport data.");
@@ -70,191 +69,167 @@ export default function AdminTransportPage() {
     "mt-1 w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200";
 
   if (loading) return <PageLoader />;
-  if (error && !form.autoTimings.length)
-    return <ErrorMessage message={error} onRetry={load} />;
+  if (error && !form.pickupPgToUniv) return <ErrorMessage message={error} onRetry={load} />;
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900">Transport</h1>
+      <h1 className="text-2xl font-bold text-slate-900">Transport Settings</h1>
       <p className="mt-1 text-sm text-slate-600">
-        Manage auto timings, pickup points, and charges.
+        Manage charges, pickup points, and departure timings.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-3xl space-y-6">
+        {/* Charges Section */}
         <Card>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="font-bold text-slate-900">Auto Timings</h2>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  setForm((f) => ({
-                    ...f,
-                    autoTimings: [...f.autoTimings, ""],
-                  }))
-                }
-              >
-                Add Timing
-              </Button>
-            </div>
-            {form.autoTimings.map((timing, i) => (
-              <div key={i} className="flex gap-2">
-                <input
-                  value={timing}
-                  onChange={(e) => {
-                    const updated = [...form.autoTimings];
-                    updated[i] = e.target.value;
-                    setForm((f) => ({ ...f, autoTimings: updated }));
-                  }}
-                  placeholder="e.g. 7:00 AM – University"
-                  className={inputClass + " mt-0 flex-1"}
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setForm((f) => ({
-                      ...f,
-                      autoTimings: f.autoTimings.filter((_, idx) => idx !== i),
-                    }))
-                  }
-                  className="text-red-600 text-sm"
-                >
-                  Remove
-                </button>
+          <CardContent className="space-y-4">
+            <h2 className="font-bold text-slate-900 border-b border-slate-100 pb-2">Transport Charges (₹)</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-slate-700">Monthly Charges</h3>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500">Mandadam Buildings</label>
+                  <input
+                    type="number"
+                    required
+                    value={form.monthlyMandadam || ""}
+                    onChange={(e) => setForm((f) => ({ ...f, monthlyMandadam: Number(e.target.value) }))}
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500">Inavolu Buildings</label>
+                  <input
+                    type="number"
+                    required
+                    value={form.monthlyInavolu || ""}
+                    onChange={(e) => setForm((f) => ({ ...f, monthlyInavolu: Number(e.target.value) }))}
+                    className={inputClass}
+                  />
+                </div>
               </div>
-            ))}
+              <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-slate-700">Weekly Charges</h3>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500">Mandadam Buildings</label>
+                  <input
+                    type="number"
+                    required
+                    value={form.weeklyMandadam || ""}
+                    onChange={(e) => setForm((f) => ({ ...f, weeklyMandadam: Number(e.target.value) }))}
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500">Inavolu Buildings</label>
+                  <input
+                    type="number"
+                    required
+                    value={form.weeklyInavolu || ""}
+                    onChange={(e) => setForm((f) => ({ ...f, weeklyInavolu: Number(e.target.value) }))}
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="font-bold text-slate-900">Pickup Points</h2>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  setForm((f) => ({
-                    ...f,
-                    pickupPoints: [...f.pickupPoints, { name: "", time: "" }],
-                  }))
-                }
-              >
-                Add Point
-              </Button>
-            </div>
-            {form.pickupPoints.map((point, i) => (
-              <div key={i} className="flex gap-2">
+        {/* Pickup Points & Timings */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardContent className="space-y-4">
+              <h2 className="font-bold text-slate-900 border-b border-slate-100 pb-2">PG → University</h2>
+              <div>
+                <label className="block text-xs font-medium text-slate-500">Pickup Point</label>
                 <input
-                  value={point.name}
-                  onChange={(e) => {
-                    const updated = [...form.pickupPoints];
-                    updated[i] = { ...updated[i], name: e.target.value };
-                    setForm((f) => ({ ...f, pickupPoints: updated }));
-                  }}
-                  placeholder="Point name"
-                  className={inputClass + " mt-0 flex-1"}
+                  required
+                  value={form.pickupPgToUniv}
+                  onChange={(e) => setForm((f) => ({ ...f, pickupPgToUniv: e.target.value }))}
+                  className={inputClass}
+                  placeholder="e.g. Hostel Mess"
                 />
-                <input
-                  value={point.time}
-                  onChange={(e) => {
-                    const updated = [...form.pickupPoints];
-                    updated[i] = { ...updated[i], time: e.target.value };
-                    setForm((f) => ({ ...f, pickupPoints: updated }));
-                  }}
-                  placeholder="Time"
-                  className={inputClass + " mt-0 w-32"}
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setForm((f) => ({
-                      ...f,
-                      pickupPoints: f.pickupPoints.filter((_, idx) => idx !== i),
-                    }))
-                  }
-                  className="text-red-600 text-sm"
-                >
-                  Remove
-                </button>
               </div>
-            ))}
-          </CardContent>
-        </Card>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-medium text-slate-500">Departure Timings</label>
+                  <Button type="button" variant="outline" size="sm" onClick={() => setForm(f => ({ ...f, timingsPgToUniv: [...f.timingsPgToUniv, ""] }))}>
+                    Add Time
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {form.timingsPgToUniv.map((time, i) => (
+                    <div key={i} className="flex gap-2">
+                      <input
+                        value={time}
+                        onChange={(e) => {
+                          const updated = [...form.timingsPgToUniv];
+                          updated[i] = e.target.value;
+                          setForm(f => ({ ...f, timingsPgToUniv: updated }));
+                        }}
+                        className={inputClass + " mt-0 flex-1"}
+                        placeholder="e.g. 8:30 AM"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setForm(f => ({ ...f, timingsPgToUniv: f.timingsPgToUniv.filter((_, idx) => idx !== i) }))}
+                        className="text-red-600 text-xs px-2"
+                      >
+                        Drop
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="font-bold text-slate-900">Charges</h2>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  setForm((f) => ({
-                    ...f,
-                    charges: [...f.charges, { label: "", amount: 0 }],
-                  }))
-                }
-              >
-                Add Charge
-              </Button>
-            </div>
-            {form.charges.map((charge, i) => (
-              <div key={i} className="flex gap-2">
+          <Card>
+            <CardContent className="space-y-4">
+              <h2 className="font-bold text-slate-900 border-b border-slate-100 pb-2">University → PG</h2>
+              <div>
+                <label className="block text-xs font-medium text-slate-500">Pickup Point</label>
                 <input
-                  value={charge.label}
-                  onChange={(e) => {
-                    const updated = [...form.charges];
-                    updated[i] = { ...updated[i], label: e.target.value };
-                    setForm((f) => ({ ...f, charges: updated }));
-                  }}
-                  placeholder="Label"
-                  className={inputClass + " mt-0 flex-1"}
+                  required
+                  value={form.pickupUnivToPg}
+                  onChange={(e) => setForm((f) => ({ ...f, pickupUnivToPg: e.target.value }))}
+                  className={inputClass}
+                  placeholder="e.g. VIT-AP Main Gate"
                 />
-                <input
-                  type="number"
-                  value={charge.amount || ""}
-                  onChange={(e) => {
-                    const updated = [...form.charges];
-                    updated[i] = {
-                      ...updated[i],
-                      amount: Number(e.target.value),
-                    };
-                    setForm((f) => ({ ...f, charges: updated }));
-                  }}
-                  placeholder="Amount"
-                  className={inputClass + " mt-0 w-28"}
-                />
-                <input
-                  value={charge.note ?? ""}
-                  onChange={(e) => {
-                    const updated = [...form.charges];
-                    updated[i] = { ...updated[i], note: e.target.value };
-                    setForm((f) => ({ ...f, charges: updated }));
-                  }}
-                  placeholder="Note"
-                  className={inputClass + " mt-0 flex-1"}
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setForm((f) => ({
-                      ...f,
-                      charges: f.charges.filter((_, idx) => idx !== i),
-                    }))
-                  }
-                  className="text-red-600 text-sm"
-                >
-                  Remove
-                </button>
               </div>
-            ))}
-          </CardContent>
-        </Card>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-medium text-slate-500">Departure Timings</label>
+                  <Button type="button" variant="outline" size="sm" onClick={() => setForm(f => ({ ...f, timingsUnivToPg: [...f.timingsUnivToPg, ""] }))}>
+                    Add Time
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {form.timingsUnivToPg.map((time, i) => (
+                    <div key={i} className="flex gap-2">
+                      <input
+                        value={time}
+                        onChange={(e) => {
+                          const updated = [...form.timingsUnivToPg];
+                          updated[i] = e.target.value;
+                          setForm(f => ({ ...f, timingsUnivToPg: updated }));
+                        }}
+                        className={inputClass + " mt-0 flex-1"}
+                        placeholder="e.g. 4:00 PM"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setForm(f => ({ ...f, timingsUnivToPg: f.timingsUnivToPg.filter((_, idx) => idx !== i) }))}
+                        className="text-red-600 text-xs px-2"
+                      >
+                        Drop
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {error && (
           <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -268,7 +243,7 @@ export default function AdminTransportPage() {
         )}
 
         <Button type="submit" loading={saving}>
-          Save Transport
+          Save Transport Configuration
         </Button>
       </form>
     </div>
