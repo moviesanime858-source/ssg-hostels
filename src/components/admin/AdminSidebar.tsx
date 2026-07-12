@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/Button";
 const adminLinks = [
   { href: "/admin", label: "Dashboard", exact: true },
   { href: "/admin/buildings", label: "Buildings" },
+  { href: "/admin/rooms", label: "Rooms" },
+  { href: "/admin/students", label: "Students" },
   { href: "/admin/facilities", label: "Facilities" },
   { href: "/admin/inquiries", label: "Inquiries" },
   { href: "/admin/contact", label: "Contact" },

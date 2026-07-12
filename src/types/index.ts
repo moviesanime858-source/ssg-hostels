@@ -157,3 +157,51 @@ export interface InquiryInput {
   buildingId: string;
   buildingName: string;
 }
+
+export interface Room {
+  id: string;
+  roomNumber: string;
+  buildingId: string;
+  roomType: "2 Sharing" | "3 Sharing" | "4 Sharing";
+  monthlyRent: number;
+  capacity: number;
+  occupants: number;
+  status: "available" | "full" | "maintenance";
+  createdAt?: string;
+}
+
+export interface RoomInput {
+  roomNumber: string;
+  buildingId: string;
+  roomType: "2 Sharing" | "3 Sharing" | "4 Sharing";
+  monthlyRent: number;
+  capacity: number;
+  occupants: number;
+  status: "available" | "full" | "maintenance";
+}
+
+export interface Student {
+  id: string;
+  name: string;
+  phone: string;
+  joinedDate: string;
+  monthlyFee: number;
+  feePaid: number;
+  remainingFee: number;
+  roomId: string;
+  buildingId: string;
+  status: "active" | "inactive";
+  createdAt?: string;
+}
+
+export interface StudentInput {
+  name: string;
+  phone: string;
+  joinedDate: string;
+  monthlyFee: number;
+  feePaid: number;
+  remainingFee: number;
+  roomId: string;
+  buildingId: string;
+  status: "active" | "inactive";
+}

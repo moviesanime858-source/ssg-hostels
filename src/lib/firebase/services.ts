@@ -22,6 +22,10 @@ import type {
   FacilityItem,
   Transport,
   TransportInput,
+  Student,
+  StudentInput,
+  Room,
+  RoomInput,
 } from "@/types";
 
 const COLLECTIONS = {
@@ -30,6 +34,8 @@ const COLLECTIONS = {
   facilities: "facilities",
   contact: "contact",
   inquiries: "inquiries",
+  students: "students",
+  rooms: "rooms",
 } as const;
 
 function timestampToISO(value: unknown): string {
@@ -239,4 +245,92 @@ export async function getInquiries(): Promise<Inquiry[]> {
 
 export async function deleteInquiry(id: string): Promise<void> {
   await deleteDoc(doc(getFirebaseDb(), COLLECTIONS.inquiries, id));
+}
+
+// ─── Students ────────────────────────────────────────────────────────────────
+
+export async function getStudents(): Promise<Student[]> {
+  const q = query(
+    collection(getFirebaseDb(), COLLECTIONS.students),
+    orderBy("createdAt", "desc")
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((d) => {
+    const data = d.data();
+    return {
+      id: d.id,
+      name: (data.name as string) ?? "",
+      phone: (data.phone as string) ?? "",
+      joinedDate: (data.joinedDate as string) ?? "",
+      monthlyFee: (data.monthlyFee as number) ?? 0,
+      feePaid: (data.feePaid as number) ?? 0,
+      remainingFee: (data.remainingFee as number) ?? 0,
+      roomId: (data.roomId as string) ?? "",
+      buildingId: (data.buildingId as string) ?? "",
+      status: (data.status as "active" | "inactive") ?? "active",
+      createdAt: timestampToISO(data.createdAt),
+    };
+  });
+}
+
+export async function createStudent(data: StudentInput): Promise<string> {
+  const docRef = await addDoc(collection(getFirebaseDb(), COLLECTIONS.students), {
+    ...data,
+    createdAt: serverTimestamp(),
+  });
+  return docRef.id;
+}
+
+export async function updateStudent(
+  id: string,
+  data: Partial<StudentInput>
+): Promise<void> {
+  await updateDoc(doc(getFirebaseDb(), COLLECTIONS.students, id), data);
+}
+
+export async function deleteStudent(id: string): Promise<void> {
+  await deleteDoc(doc(getFirebaseDb(), COLLECTIONS.students, id));
+}
+
+// ─── Rooms ───────────────────────────────────────────────────────────────────
+
+export async function getRooms(): Promise<Room[]> {
+  const q = query(
+    collection(getFirebaseDb(), COLLECTIONS.rooms),
+    orderBy("createdAt", "desc")
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((d) => {
+    const data = d.data();
+    return {
+      id: d.id,
+      roomNumber: (data.roomNumber as string) ?? "",
+      buildingId: (data.buildingId as string) ?? "",
+      roomType: (data.roomType as "2 Sharing" | "3 Sharing" | "4 Sharing") ?? "2 Sharing",
+      monthlyRent: (data.monthlyRent as number) ?? 0,
+      capacity: (data.capacity as number) ?? 0,
+      occupants: (data.occupants as number) ?? 0,
+      status: (data.status as "available" | "full" | "maintenance") ?? "available",
+      createdAt: timestampToISO(data.createdAt),
+    };
+  });
+}
+
+export async function createRoom(data: RoomInput): Promise<string> {
+  const docRef = await addDoc(collection(getFirebaseDb(), COLLECTIONS.rooms), {
+    ...data,
+    createdAt: serverTimestamp(),
+  });
+  return docRef.id;
+}
+
+export async function updateRoom(
+  id: string,
+  data: Partial<RoomInput>
+): Promise<void> {
+  await updateDoc(doc(getFirebaseDb(), COLLECTIONS.rooms, id), data);
+}
+
+export async function deleteRoom(id: string): Promise<void> {
+  await deleteDoc(doc(getFirebaseDb(), COLLECTIONS.rooms, id));
 }

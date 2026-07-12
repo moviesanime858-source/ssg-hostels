@@ -14,6 +14,12 @@ const packages = [
   "Yearly Package (10 Months)",
 ];
 
+const roomTypes = [
+  "2 Sharing",
+  "3 Sharing",
+  "4 Sharing",
+];
+
 export default async function FeesPage() {
   const contact = await fetchContact();
   const whatsappMessage = "Hi, I would like to know the current fee structure for your hostel packages.";
@@ -43,6 +49,18 @@ export default async function FeesPage() {
                 </div>
               </CardHeader>
               <CardContent className="pt-8 pb-8 bg-white">
+                <div className="mb-8">
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 text-center">Room Types</h3>
+                  <div className="flex flex-wrap justify-center gap-3 px-2">
+                    {roomTypes.map((room, index) => (
+                      <span key={index} className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-teal-300 hover:bg-teal-50 hover:text-teal-900">
+                        <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                        {room}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 text-center">Available Packages</h3>
                 <ul className="space-y-4 px-2">
                   {packages.map((pkg, index) => (
@@ -72,6 +90,18 @@ export default async function FeesPage() {
                 </div>
               </CardHeader>
               <CardContent className="pt-8 pb-8 bg-white">
+                <div className="mb-8">
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 text-center">Room Types</h3>
+                  <div className="flex flex-wrap justify-center gap-3 px-2">
+                    {roomTypes.map((room, index) => (
+                      <span key={index} className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-4 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-900">
+                        <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                        {room}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 text-center">Available Packages</h3>
                 <ul className="space-y-4 px-2">
                   {packages.map((pkg, index) => (
