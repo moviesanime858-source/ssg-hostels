@@ -3,6 +3,8 @@ import { ContactButtons } from "@/components/contact/ContactButtons";
 import { fetchContact } from "@/lib/data";
 import { getTelUrl } from "@/lib/utils";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Contact",
   description: "Get in touch via phone, WhatsApp, or visit us on Google Maps.",

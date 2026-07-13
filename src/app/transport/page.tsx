@@ -4,6 +4,8 @@ import { TransportSchedule } from "@/components/transport/TransportSchedule";
 import { fetchTransport } from "@/lib/data";
 import { formatCurrency } from "@/lib/utils";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Transport",
   description: "Auto timings, pickup points, and transport charges for hostel students.",

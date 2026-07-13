@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/Button";
 import { ContactButtons } from "@/components/contact/ContactButtons";
 import { fetchBuildings, fetchContact } from "@/lib/data";
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const [buildings, contact] = await Promise.all([
     fetchBuildings(),

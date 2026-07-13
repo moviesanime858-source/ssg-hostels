@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { ContactButtons } from "@/components/contact/ContactButtons";
 import { fetchContact } from "@/lib/data";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Fees & Packages",
   description: "View available accommodation packages and room types for SSG HOSTELS.",

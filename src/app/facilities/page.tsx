@@ -2,6 +2,8 @@ import { PublicLayout } from "@/components/layout/PublicLayout";
 import { FacilityCard } from "@/components/facilities/FacilityCard";
 import { fetchFacilities } from "@/lib/data";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Facilities",
   description: "WiFi, laundry, food, hot water, security, housekeeping, and more hostel amenities.",

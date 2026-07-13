@@ -4,6 +4,8 @@ import { fetchBuildings, fetchContact } from "@/lib/data";
 import { ContactButtons } from "@/components/contact/ContactButtons";
 import { Card, CardContent } from "@/components/ui/Card";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Buildings",
   description: "Browse all hostel buildings with rent, vacancy, and location details.",
