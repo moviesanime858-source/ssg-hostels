@@ -73,7 +73,7 @@ export default function AdminStudentsPage() {
 
   // Update remaining fee automatically
   useEffect(() => {
-    const remaining = Math.max(0, form.monthlyFee - form.feePaid);
+    const remaining = form.monthlyFee - form.feePaid;
     if (remaining !== form.remainingFee) {
       setForm(f => ({ ...f, remainingFee: remaining }));
     }
@@ -266,9 +266,9 @@ export default function AdminStudentsPage() {
                   <label className="block text-sm font-medium text-slate-700">Remaining Fee</label>
                   <input
                     readOnly
-                    type="number"
-                    value={form.remainingFee}
-                    className={`${inputClass} bg-slate-50 font-bold ${form.remainingFee > 0 ? "text-red-600" : "text-emerald-600"}`}
+                    type="text"
+                    value={form.remainingFee < 0 ? `Advance: ₹${Math.abs(form.remainingFee)}` : form.remainingFee}
+                    className={`${inputClass} bg-slate-50 font-bold ${form.remainingFee < 0 ? "text-indigo-600" : form.remainingFee > 0 ? "text-red-600" : "text-emerald-600"}`}
                   />
                 </div>
               </div>
@@ -320,8 +320,8 @@ export default function AdminStudentsPage() {
                     <td className="px-6 py-4 font-medium text-slate-800">₹{student.monthlyFee}</td>
                     <td className="px-6 py-4">
                       <div className="text-emerald-600 font-medium">₹{student.feePaid}</div>
-                      <div className={`text-xs mt-1 font-semibold ${student.remainingFee > 0 ? "text-red-600" : "text-slate-400"}`}>
-                        ₹{student.remainingFee} rem.
+                      <div className={`text-xs mt-1 font-semibold ${student.remainingFee < 0 ? "text-indigo-600" : student.remainingFee > 0 ? "text-red-600" : "text-slate-400"}`}>
+                        {student.remainingFee < 0 ? `Advance: ₹${Math.abs(student.remainingFee)}` : `₹${student.remainingFee} rem.`}
                       </div>
                     </td>
                     <td className="px-6 py-4">
