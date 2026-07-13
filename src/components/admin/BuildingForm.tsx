@@ -46,7 +46,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
       : emptyForm
   );
   const [facilityInput, setFacilityInput] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [imageUrlInput, setImageUrlInput] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -57,24 +57,10 @@ export function BuildingForm({ building }: BuildingFormProps) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = e.target.files;
-    if (!files?.length) return;
-
-    setUploading(true);
-    try {
-      const urls: string[] = [];
-      for (const file of Array.from(files)) {
-        const path = `buildings/${Date.now()}-${file.name}`;
-        const url = await uploadImage(file, path);
-        urls.push(url);
-      }
-      updateField("images", [...form.images, ...urls]);
-    } catch {
-      alert("Failed to upload image(s).");
-    } finally {
-      setUploading(false);
-    }
+  function addImageUrl() {
+    if (!imageUrlInput.trim()) return;
+    updateField("images", [...form.images, imageUrlInput.trim()]);
+    setImageUrlInput("");
   }
 
   function addRoomType() {
@@ -249,17 +235,24 @@ export function BuildingForm({ building }: BuildingFormProps) {
       <Card>
         <CardContent className="space-y-4">
           <h2 className="font-bold text-slate-900">Images</h2>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            disabled={uploading}
-            className="text-sm"
-          />
-          {uploading && (
-            <p className="text-sm text-teal-600">Uploading...</p>
-          )}
+          <div className="flex gap-2">
+            <input
+              type="url"
+              placeholder="Paste image URL here (e.g. from Google Drive, Imgur)"
+              value={imageUrlInput}
+              onChange={(e) => setImageUrlInput(e.target.value)}
+              className={inputClass + " mt-0 flex-1"}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addImageUrl();
+                }
+              }}
+            />
+            <Button type="button" variant="outline" onClick={addImageUrl}>
+              Add Image
+            </Button>
+          </div>
           {form.images.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {form.images.map((url, i) => (
