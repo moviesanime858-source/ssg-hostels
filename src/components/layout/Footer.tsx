@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { getTelUrl, getWhatsAppUrl } from "@/lib/utils";
 import type { ContactInfo } from "@/types";

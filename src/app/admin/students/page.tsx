@@ -175,7 +175,7 @@ export default function AdminStudentsPage() {
     const periods = student.vacationPeriods || [];
     const activeIndex = periods.findIndex(p => !p.endDate);
     
-    let updatedPeriods = [...periods];
+    const updatedPeriods = [...periods];
     
     if (activeIndex >= 0) {
       // Resume: set endDate to today

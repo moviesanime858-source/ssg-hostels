@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import {
   createBuilding,
   updateBuilding,
-  uploadImage,
 } from "@/lib/firebase/services";
 import type { Building, BuildingInput, VacancyStatus } from "@/types";
 import { Button } from "@/components/ui/Button";
