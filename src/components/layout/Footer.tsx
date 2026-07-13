@@ -46,7 +46,7 @@ export function Footer({ contact }: { contact: ContactInfo }) {
                 href={getTelUrl(phone)}
                 className="flex items-center gap-2 text-sm text-slate-300 hover:text-white"
               >
-                📞 +91 {phone}
+                📞 {phone}
               </a>
               <a
                 href={getWhatsAppUrl(contact.whatsapp, whatsappMsg)}
@@ -60,8 +60,18 @@ export function Footer({ contact }: { contact: ContactInfo }) {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-slate-800 pt-6 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} Sri Siva Ganesh Boys Hostel. All rights reserved.
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between border-t border-slate-800 pt-6 text-xs text-slate-500">
+          <div>
+            © {new Date().getFullYear()} Sri Siva Ganesh Boys Hostel. All rights reserved.
+          </div>
+          <div className="mt-4 sm:mt-0 flex items-center gap-2">
+            <span>Developed by:</span>
+            <a href="https://wa.me/919949552648" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Lokeshwar</a>
+            <span className="text-slate-700">•</span>
+            <a href="https://wa.me/919561287172" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Pavan</a>
+            <span className="text-slate-700">•</span>
+            <a href="https://wa.me/919618484381" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Nithin</a>
+          </div>
         </div>
       </div>
     </footer>
