@@ -187,6 +187,7 @@ export interface VacationPeriod {
 
 export interface Student {
   id: string;
+  registrationNumber?: string;
   name: string;
   phone: string;
   joinedDate: string;
@@ -201,6 +202,7 @@ export interface Student {
 }
 
 export interface StudentInput {
+  registrationNumber?: string;
   name: string;
   phone: string;
   joinedDate: string;

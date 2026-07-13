@@ -30,6 +30,7 @@ export default function AdminRoomsPage() {
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [form, setForm] = useState<RoomInput>(INITIAL_FORM);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -233,7 +234,18 @@ export default function AdminRoomsPage() {
         </CardContent>
       </Card>
 
-      <div className="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 className="text-lg font-bold text-slate-800">All Rooms</h2>
+        <input 
+          type="search"
+          placeholder="Search rooms by number, type, or building..."
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          className="w-full sm:w-80 rounded-xl border border-slate-300 px-4 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200"
+        />
+      </div>
+
+      <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-600">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
@@ -248,7 +260,17 @@ export default function AdminRoomsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {rooms.map((room) => {
+              {rooms
+                .filter(room => {
+                  const bName = buildings.find(b => b.id === room.buildingId)?.name || "Unknown Building";
+                  const term = searchTerm.toLowerCase();
+                  return (
+                    room.roomNumber.toLowerCase().includes(term) ||
+                    room.roomType.toLowerCase().includes(term) ||
+                    bName.toLowerCase().includes(term)
+                  );
+                })
+                .map((room) => {
                 const bName = buildings.find(b => b.id === room.buildingId)?.name || "Unknown Building";
                 return (
                   <tr key={room.id} className="hover:bg-slate-50">

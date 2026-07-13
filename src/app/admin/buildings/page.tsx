@@ -16,6 +16,7 @@ export default function AdminBuildingsPage() {
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function loadBuildings() {
@@ -73,7 +74,17 @@ export default function AdminBuildingsPage() {
         </div>
       )}
 
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+      <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-end gap-4">
+        <input 
+          type="search"
+          placeholder="Search buildings..."
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          className="w-full sm:w-80 rounded-xl border border-slate-300 px-4 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200"
+        />
+      </div>
+
+      <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="border-b border-slate-200 bg-slate-50">
             <tr>
@@ -85,7 +96,12 @@ export default function AdminBuildingsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {buildings.map((building) => (
+            {buildings
+              .filter(b => 
+                b.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                b.distanceFromUniversity.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((building) => (
               <tr key={building.id} className="hover:bg-slate-50">
                 <td className="px-4 py-3 font-medium text-slate-900">
                   {building.name}

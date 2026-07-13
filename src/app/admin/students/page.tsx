@@ -17,6 +17,7 @@ import { PageLoader } from "@/components/ui/LoadingSpinner";
 import { ErrorMessage } from "@/components/ui/ErrorMessage";
 
 const INITIAL_FORM: StudentInput = {
+  registrationNumber: "",
   name: "",
   phone: "",
   joinedDate: "",
@@ -65,6 +66,7 @@ export default function AdminStudentsPage() {
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [form, setForm] = useState<StudentInput>(INITIAL_FORM);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -116,6 +118,7 @@ export default function AdminStudentsPage() {
   function startEdit(student: Student) {
     setEditingId(student.id);
     setForm({
+      registrationNumber: student.registrationNumber || "",
       name: student.name,
       phone: student.phone,
       joinedDate: student.joinedDate,
@@ -221,6 +224,15 @@ export default function AdminStudentsPage() {
           
           {(editingId || form.joinedDate !== "") && (
             <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+              <div>
+                <label className="block text-sm font-medium text-slate-700">Reg. Number (Univ ID)</label>
+                <input
+                  value={form.registrationNumber || ""}
+                  onChange={(e) => setForm((f) => ({ ...f, registrationNumber: e.target.value }))}
+                  className={inputClass}
+                  placeholder="Optional"
+                />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700">Full Name</label>
                 <input
@@ -405,12 +417,23 @@ export default function AdminStudentsPage() {
         </CardContent>
       </Card>
 
-      <div className="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 className="text-lg font-bold text-slate-800">All Students</h2>
+        <input 
+          type="search"
+          placeholder="Search by name, ID, or phone..."
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          className="w-full sm:w-80 rounded-xl border border-slate-300 px-4 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-200"
+        />
+      </div>
+
+      <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-slate-600">
             <thead className="bg-slate-50 text-xs uppercase text-slate-500">
               <tr>
-                <th className="px-6 py-4 font-semibold">Name / Phone</th>
+                <th className="px-6 py-4 font-semibold">Name / ID / Phone</th>
                 <th className="px-6 py-4 font-semibold">Room Info</th>
                 <th className="px-6 py-4 font-semibold">Joined Date</th>
                 <th className="px-6 py-4 font-semibold">Fee (Monthly)</th>
@@ -420,7 +443,13 @@ export default function AdminStudentsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {students.map((student) => {
+              {students
+                .filter(s => 
+                  s.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                  s.phone.includes(searchTerm) || 
+                  (s.registrationNumber && s.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase()))
+                )
+                .map((student) => {
                 const bName = buildings.find(b => b.id === student.buildingId)?.name || "Unknown Building";
                 const room = rooms.find(r => r.id === student.roomId);
                 const rNum = room ? room.roomNumber : "Unknown Room";
@@ -434,6 +463,9 @@ export default function AdminStudentsPage() {
                   <tr key={student.id} className="hover:bg-slate-50">
                     <td className="px-6 py-4">
                       <div className="font-medium text-slate-900">{student.name}</div>
+                      {student.registrationNumber && (
+                        <div className="text-xs text-teal-600 mt-1 font-semibold">{student.registrationNumber}</div>
+                      )}
                       <div className="text-xs text-slate-500 mt-1">{student.phone}</div>
                     </td>
                     <td className="px-6 py-4">
