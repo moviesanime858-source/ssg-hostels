@@ -10,7 +10,7 @@ import {
   getBuildings,
 } from "@/lib/firebase/services";
 import { isFirebaseConfigured } from "@/lib/firebase/config";
-import type { Student, StudentInput, Room, Building } from "@/types";
+import type { Student, StudentInput, Room, Building, VacationPeriod } from "@/types";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { PageLoader } from "@/components/ui/LoadingSpinner";
@@ -26,19 +26,37 @@ const INITIAL_FORM: StudentInput = {
   roomId: "",
   buildingId: "",
   status: "active",
+  vacationPeriods: [],
 };
 
-function calculateMonthsPassed(joinedDateStr: string): number {
+function calculateMonthsPassed(joinedDateStr: string, vacationPeriods: VacationPeriod[] = []): number {
   if (!joinedDateStr) return 0;
   const joined = new Date(joinedDateStr);
   const now = new Date();
   if (isNaN(joined.getTime())) return 0;
 
-  let months = (now.getFullYear() - joined.getFullYear()) * 12 + (now.getMonth() - joined.getMonth());
-  if (now.getDate() < joined.getDate()) {
-    months--;
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const totalDays = Math.max(0, Math.floor((now.getTime() - joined.getTime()) / msPerDay));
+
+  let vacationDays = 0;
+  for (const period of vacationPeriods) {
+    if (!period.startDate) continue;
+    const start = new Date(period.startDate);
+    const end = period.endDate ? new Date(period.endDate) : now;
+    
+    if (isNaN(start.getTime()) || isNaN(end.getTime()) || start.getTime() > end.getTime()) continue;
+    
+    const actualStart = start.getTime() < joined.getTime() ? joined : start;
+    const actualEnd = end.getTime() > now.getTime() ? now : end;
+    
+    if (actualStart.getTime() < actualEnd.getTime()) {
+      vacationDays += Math.floor((actualEnd.getTime() - actualStart.getTime()) / msPerDay);
+    }
   }
-  return Math.max(1, months + 1);
+
+  const billableDays = Math.max(0, totalDays - vacationDays);
+  // Using 30 days as a standard hostel billing month
+  return Math.floor(billableDays / 30) + 1;
 }
 
 export default function AdminStudentsPage() {
@@ -86,14 +104,14 @@ export default function AdminStudentsPage() {
 
   // Update remaining fee automatically
   useEffect(() => {
-    const monthsPassed = calculateMonthsPassed(form.joinedDate);
+    const monthsPassed = calculateMonthsPassed(form.joinedDate, form.vacationPeriods);
     const totalOwed = form.monthlyFee * monthsPassed;
     const remaining = totalOwed - form.feePaid;
     
     if (remaining !== form.remainingFee) {
       setForm(f => ({ ...f, remainingFee: remaining }));
     }
-  }, [form.monthlyFee, form.feePaid, form.joinedDate, form.remainingFee]);
+  }, [form.monthlyFee, form.feePaid, form.joinedDate, form.vacationPeriods, form.remainingFee]);
 
   function startEdit(student: Student) {
     setEditingId(student.id);
@@ -107,6 +125,7 @@ export default function AdminStudentsPage() {
       roomId: student.roomId,
       buildingId: student.buildingId,
       status: student.status,
+      vacationPeriods: student.vacationPeriods || [],
     });
   }
 
@@ -148,6 +167,29 @@ export default function AdminStudentsPage() {
       setStudents((prev) => prev.filter((s) => s.id !== id));
     } catch {
       alert("Failed to delete student.");
+    }
+  }
+
+  async function togglePause(student: Student) {
+    const today = new Date().toISOString().split("T")[0];
+    const periods = student.vacationPeriods || [];
+    const activeIndex = periods.findIndex(p => !p.endDate);
+    
+    let updatedPeriods = [...periods];
+    
+    if (activeIndex >= 0) {
+      // Resume: set endDate to today
+      updatedPeriods[activeIndex].endDate = today;
+    } else {
+      // Pause: add new period starting today
+      updatedPeriods.push({ startDate: today, endDate: "" });
+    }
+    
+    try {
+      await updateStudent(student.id, { ...student, vacationPeriods: updatedPeriods });
+      setStudents(prev => prev.map(s => s.id === student.id ? { ...s, vacationPeriods: updatedPeriods } : s));
+    } catch {
+      alert("Failed to update pause state.");
     }
   }
 
@@ -288,6 +330,67 @@ export default function AdminStudentsPage() {
                   />
                 </div>
               </div>
+
+              {/* Vacation Periods Section */}
+              <div className="md:col-span-3 border-t border-slate-200 mt-2 pt-4">
+                <div className="flex items-center justify-between">
+                  <label className="block text-sm font-medium text-slate-700">Vacation Periods (Billing Paused)</label>
+                  <Button type="button" size="sm" variant="outline" onClick={() => {
+                    setForm(f => ({
+                      ...f,
+                      vacationPeriods: [...(f.vacationPeriods || []), { startDate: "", endDate: "" }]
+                    }));
+                  }}>
+                    + Add Break
+                  </Button>
+                </div>
+                
+                {form.vacationPeriods && form.vacationPeriods.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {form.vacationPeriods.map((vp, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div className="flex-1">
+                          <label className="block text-xs text-slate-500 mb-1">From Date</label>
+                          <input
+                            type="date"
+                            value={vp.startDate}
+                            onChange={(e) => {
+                              const newVp = [...form.vacationPeriods!];
+                              newVp[index].startDate = e.target.value;
+                              setForm(f => ({ ...f, vacationPeriods: newVp }));
+                            }}
+                            className={inputClass}
+                          />
+                        </div>
+                        <span className="text-slate-400 mt-5">to</span>
+                        <div className="flex-1">
+                          <label className="block text-xs text-slate-500 mb-1">To Date</label>
+                          <input
+                            type="date"
+                            value={vp.endDate}
+                            onChange={(e) => {
+                              const newVp = [...form.vacationPeriods!];
+                              newVp[index].endDate = e.target.value;
+                              setForm(f => ({ ...f, vacationPeriods: newVp }));
+                            }}
+                            className={inputClass}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newVp = form.vacationPeriods!.filter((_, i) => i !== index);
+                            setForm(f => ({ ...f, vacationPeriods: newVp }));
+                          }}
+                          className="mt-6 p-2 text-red-500 hover:bg-red-50 rounded-lg font-bold"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
               
               <div className="md:col-span-3 flex gap-2 mt-4">
                 <Button type="submit" loading={saving}>
@@ -322,9 +425,10 @@ export default function AdminStudentsPage() {
                 const room = rooms.find(r => r.id === student.roomId);
                 const rNum = room ? room.roomNumber : "Unknown Room";
                 
-                const monthsPassed = calculateMonthsPassed(student.joinedDate);
+                const monthsPassed = calculateMonthsPassed(student.joinedDate, student.vacationPeriods);
                 const totalOwed = student.monthlyFee * monthsPassed;
                 const dynamicRemaining = totalOwed - student.feePaid;
+                const isPaused = (student.vacationPeriods || []).some(p => !p.endDate);
                 
                 return (
                   <tr key={student.id} className="hover:bg-slate-50">
@@ -348,14 +452,24 @@ export default function AdminStudentsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                        student.status === "active" ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-700"
-                      }`}>
-                        {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
-                      </span>
+                      <div className="flex flex-col gap-1 items-start">
+                        <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                          student.status === "active" ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-700"
+                        }`}>
+                          {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
+                        </span>
+                        {isPaused && (
+                          <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-amber-100 text-amber-700">
+                            Paused
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex justify-end gap-3">
+                      <div className="flex justify-end gap-3 items-center">
+                        <button onClick={() => togglePause(student)} className={`text-xs font-medium ${isPaused ? "text-emerald-600 hover:text-emerald-700" : "text-amber-600 hover:text-amber-700"}`}>
+                          {isPaused ? "▶ Resume" : "⏸ Pause"}
+                        </button>
                         <button onClick={() => startEdit(student)} className="text-teal-600 hover:underline">Edit</button>
                         <button onClick={() => handleDelete(student.id)} className="text-red-600 hover:underline">Delete</button>
                       </div>

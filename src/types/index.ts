@@ -180,6 +180,11 @@ export interface RoomInput {
   status: "available" | "full" | "maintenance";
 }
 
+export interface VacationPeriod {
+  startDate: string;
+  endDate: string; // empty string "" means currently on break
+}
+
 export interface Student {
   id: string;
   name: string;
@@ -191,6 +196,7 @@ export interface Student {
   roomId: string;
   buildingId: string;
   status: "active" | "inactive";
+  vacationPeriods?: VacationPeriod[];
   createdAt?: string;
 }
 
@@ -204,4 +210,5 @@ export interface StudentInput {
   roomId: string;
   buildingId: string;
   status: "active" | "inactive";
+  vacationPeriods?: VacationPeriod[];
 }
