@@ -28,6 +28,19 @@ const INITIAL_FORM: StudentInput = {
   status: "active",
 };
 
+function calculateMonthsPassed(joinedDateStr: string): number {
+  if (!joinedDateStr) return 0;
+  const joined = new Date(joinedDateStr);
+  const now = new Date();
+  if (isNaN(joined.getTime())) return 0;
+
+  let months = (now.getFullYear() - joined.getFullYear()) * 12 + (now.getMonth() - joined.getMonth());
+  if (now.getDate() < joined.getDate()) {
+    months--;
+  }
+  return Math.max(1, months + 1);
+}
+
 export default function AdminStudentsPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -73,11 +86,14 @@ export default function AdminStudentsPage() {
 
   // Update remaining fee automatically
   useEffect(() => {
-    const remaining = form.monthlyFee - form.feePaid;
+    const monthsPassed = calculateMonthsPassed(form.joinedDate);
+    const totalOwed = form.monthlyFee * monthsPassed;
+    const remaining = totalOwed - form.feePaid;
+    
     if (remaining !== form.remainingFee) {
       setForm(f => ({ ...f, remainingFee: remaining }));
     }
-  }, [form.monthlyFee, form.feePaid, form.remainingFee]);
+  }, [form.monthlyFee, form.feePaid, form.joinedDate, form.remainingFee]);
 
   function startEdit(student: Student) {
     setEditingId(student.id);
@@ -252,7 +268,7 @@ export default function AdminStudentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700">Fee Paid (This Month)</label>
+                  <label className="block text-sm font-medium text-slate-700">Total Payments Made (Lifetime)</label>
                   <input
                     required
                     type="number"
@@ -263,11 +279,11 @@ export default function AdminStudentsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700">Remaining Fee</label>
+                  <label className="block text-sm font-medium text-slate-700">Balance Status</label>
                   <input
                     readOnly
                     type="text"
-                    value={form.remainingFee < 0 ? `Advance: ₹${Math.abs(form.remainingFee)}` : form.remainingFee}
+                    value={form.remainingFee < 0 ? `Advance: ₹${Math.abs(form.remainingFee)}` : `Due: ₹${form.remainingFee}`}
                     className={`${inputClass} bg-slate-50 font-bold ${form.remainingFee < 0 ? "text-indigo-600" : form.remainingFee > 0 ? "text-red-600" : "text-emerald-600"}`}
                   />
                 </div>
@@ -306,6 +322,10 @@ export default function AdminStudentsPage() {
                 const room = rooms.find(r => r.id === student.roomId);
                 const rNum = room ? room.roomNumber : "Unknown Room";
                 
+                const monthsPassed = calculateMonthsPassed(student.joinedDate);
+                const totalOwed = student.monthlyFee * monthsPassed;
+                const dynamicRemaining = totalOwed - student.feePaid;
+                
                 return (
                   <tr key={student.id} className="hover:bg-slate-50">
                     <td className="px-6 py-4">
@@ -316,12 +336,15 @@ export default function AdminStudentsPage() {
                       <div className="font-medium text-slate-800">Room {rNum}</div>
                       <div className="text-xs text-slate-500 mt-1 truncate max-w-[120px]" title={bName}>{bName}</div>
                     </td>
-                    <td className="px-6 py-4">{student.joinedDate || "N/A"}</td>
+                    <td className="px-6 py-4">
+                      {student.joinedDate || "N/A"}
+                      <div className="text-xs text-slate-400 mt-1">{monthsPassed} month(s)</div>
+                    </td>
                     <td className="px-6 py-4 font-medium text-slate-800">₹{student.monthlyFee}</td>
                     <td className="px-6 py-4">
                       <div className="text-emerald-600 font-medium">₹{student.feePaid}</div>
-                      <div className={`text-xs mt-1 font-semibold ${student.remainingFee < 0 ? "text-indigo-600" : student.remainingFee > 0 ? "text-red-600" : "text-slate-400"}`}>
-                        {student.remainingFee < 0 ? `Advance: ₹${Math.abs(student.remainingFee)}` : `₹${student.remainingFee} rem.`}
+                      <div className={`text-xs mt-1 font-semibold ${dynamicRemaining < 0 ? "text-indigo-600" : dynamicRemaining > 0 ? "text-red-600" : "text-slate-400"}`}>
+                        {dynamicRemaining < 0 ? `Advance: ₹${Math.abs(dynamicRemaining)}` : `Due: ₹${dynamicRemaining}`}
                       </div>
                     </td>
                     <td className="px-6 py-4">

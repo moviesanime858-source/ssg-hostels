@@ -60,10 +60,20 @@ export function Footer({ contact }: { contact: ContactInfo }) {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between border-t border-slate-800 pt-6 text-xs text-slate-500">
-          <div>
-            © {new Date().getFullYear()} Sri Siva Ganesh Boys Hostel. All rights reserved.
+        <div className="mt-12 border-t border-slate-800 pt-8 flex flex-col items-center justify-center text-center space-y-4">
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-sm text-slate-400 font-medium italic">
+              "Thank you Vamsi anna for your support."
+            </p>
+            <p className="text-sm text-slate-400 font-medium italic">
+              "Thank you Mani aunty for your care and giving us a Homely feel."
+            </p>
           </div>
+          
+          <div className="w-full flex flex-col sm:flex-row items-center justify-between mt-4 text-xs text-slate-500">
+            <div>
+              © {new Date().getFullYear()} Sri Siva Ganesh Boys Hostel. All rights reserved.
+            </div>
           <div className="mt-4 sm:mt-0 flex items-center gap-2">
             <span>Developed by:</span>
             <a href="https://wa.me/919949552648" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Lokeshwar</a>
