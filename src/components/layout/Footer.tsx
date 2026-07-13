@@ -63,10 +63,10 @@ export function Footer({ contact }: { contact: ContactInfo }) {
         <div className="mt-12 border-t border-slate-800 pt-8 flex flex-col items-center justify-center text-center space-y-4">
           <div className="flex flex-col items-center gap-1">
             <p className="text-sm text-slate-400 font-medium italic">
-              "Thank you Vamsi anna for your support."
+              &quot;Thank you Vamsi anna for your support.&quot;
             </p>
             <p className="text-sm text-slate-400 font-medium italic">
-              "Thank you Mani aunty for your care and giving us a Homely feel."
+              &quot;Thank you Mani aunty for your care and giving us a Homely feel.&quot;
             </p>
           </div>
           
@@ -74,13 +74,14 @@ export function Footer({ contact }: { contact: ContactInfo }) {
             <div>
               © {new Date().getFullYear()} Sri Siva Ganesh Boys Hostel. All rights reserved.
             </div>
-          <div className="mt-4 sm:mt-0 flex items-center gap-2">
-            <span>Developed by:</span>
-            <a href="https://wa.me/919949552648" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Lokeshwar</a>
-            <span className="text-slate-700">•</span>
-            <a href="https://wa.me/919561287172" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Pavan</a>
-            <span className="text-slate-700">•</span>
-            <a href="https://wa.me/919618484381" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Nithin</a>
+            <div className="mt-4 sm:mt-0 flex items-center gap-2">
+              <span>Developed by:</span>
+              <a href="https://wa.me/919949552648" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Lokeshwar</a>
+              <span className="text-slate-700">•</span>
+              <a href="https://wa.me/919561287172" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Pavan</a>
+              <span className="text-slate-700">•</span>
+              <a href="https://wa.me/919618484381" target="_blank" rel="noopener noreferrer" className="hover:text-teal-400 transition-colors">Nithin</a>
+            </div>
           </div>
         </div>
       </div>
