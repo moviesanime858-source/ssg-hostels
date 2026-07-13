@@ -57,8 +57,19 @@ export function BuildingForm({ building }: BuildingFormProps) {
   }
 
   function addImageUrl() {
-    if (!imageUrlInput.trim()) return;
-    updateField("images", [...form.images, imageUrlInput.trim()]);
+    let url = imageUrlInput.trim();
+    if (!url) return;
+
+    // Auto-convert Google Drive viewing links to direct download links
+    const gDriveMatch1 = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+    const gDriveMatch2 = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+    const fileId = (gDriveMatch1 && gDriveMatch1[1]) || (gDriveMatch2 && gDriveMatch2[1]);
+    
+    if (fileId) {
+      url = `https://drive.google.com/uc?id=${fileId}`;
+    }
+
+    updateField("images", [...form.images, url]);
     setImageUrlInput("");
   }
 
