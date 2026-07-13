@@ -21,9 +21,9 @@ export function getTelUrl(phone: string): string {
 
 export function getDefaultContact() {
   return {
-    primaryPhone: process.env.NEXT_PUBLIC_DEFAULT_PHONE ?? "+919949552648",
-    secondaryPhone: "",
-    whatsapp: process.env.NEXT_PUBLIC_DEFAULT_WHATSAPP ?? "+919949552648",
+    primaryPhone: process.env.NEXT_PUBLIC_DEFAULT_PHONE ?? "+917981580663",
+    secondaryPhone: process.env.NEXT_PUBLIC_DEFAULT_PHONE_2 ?? "",
+    whatsapp: process.env.NEXT_PUBLIC_DEFAULT_WHATSAPP ?? "+917981580663",
     email: "",
     hostelName: "SSG HOSTELS",
     inquiryMessageTemplate: "Hi, I would like to inquire about room availability.",

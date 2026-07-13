@@ -92,9 +92,9 @@ export const DEMO_TRANSPORT: Transport = {
 
 export const DEMO_CONTACT: ContactInfo = {
   id: "demo",
-  primaryPhone: "+91 99495 52648",
-  secondaryPhone: "+91 98765 43210",
-  whatsapp: "919949552648",
+  primaryPhone: "+91 79815 80663",
+  secondaryPhone: "",
+  whatsapp: "917981580663",
   email: "contact@ssghostels.com",
   hostelName: "SSG HOSTELS",
   inquiryMessageTemplate: "Hi, I would like to inquire about room availability and building details.",
