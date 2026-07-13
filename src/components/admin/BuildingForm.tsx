@@ -9,6 +9,7 @@ import {
 import type { Building, BuildingInput, VacancyStatus } from "@/types";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
+import { fixGoogleDriveUrl } from "@/lib/utils";
 
 interface BuildingFormProps {
   building?: Building;
@@ -269,7 +270,7 @@ export function BuildingForm({ building }: BuildingFormProps) {
                 <div key={url} className="relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={url}
+                    src={fixGoogleDriveUrl(url)}
                     alt={`Building ${i + 1}`}
                     className="h-20 w-28 rounded-lg object-cover"
                   />

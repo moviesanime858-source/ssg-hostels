@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { Building } from "@/types";
 import { Card, CardContent } from "@/components/ui/Card";
 import { VacancyBadge } from "@/components/ui/VacancyBadge";
+import { fixGoogleDriveUrl } from "@/lib/utils";
 
 interface BuildingCardProps {
   building: Building;
@@ -9,8 +10,9 @@ interface BuildingCardProps {
 
 export function BuildingCard({ building }: BuildingCardProps) {
   const imageUrl =
-    building.images[0] ??
-    "https://images.unsplash.com/photo-1555854877-0b037c5d5566?w=800&q=80";
+    building.images[0]
+      ? fixGoogleDriveUrl(building.images[0])
+      : "https://images.unsplash.com/photo-1555854877-0b037c5d5566?w=800&q=80";
 
   return (
     <Card className="group overflow-hidden rounded-[2rem] border-0 bg-white shadow-xl shadow-slate-200/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-900/10">

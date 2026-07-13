@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, fixGoogleDriveUrl } from "@/lib/utils";
 
 interface ImageGalleryProps {
   images: string[];
@@ -13,7 +13,7 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const galleryImages =
     images.length > 0
-      ? images
+      ? images.map(fixGoogleDriveUrl)
       : ["https://images.unsplash.com/photo-1555854877-0b037c5d5566?w=800&q=80"];
 
   return (
