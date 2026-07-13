@@ -26,8 +26,9 @@ export function AdminSidebar() {
     <>
       {/* Mobile Top Bar */}
       <div className="flex items-center justify-between border-b border-slate-200 bg-white p-4 lg:hidden">
-        <Link href="/admin" className="text-lg font-bold text-slate-900">
-          Admin<span className="text-teal-600">Panel</span>
+        <Link href="/admin" className="flex items-center gap-2 text-lg font-bold text-slate-900">
+          <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain" />
+          <span>Admin<span className="text-teal-600">Panel</span></span>
         </Link>
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -54,8 +55,9 @@ export function AdminSidebar() {
       >
         {/* Desktop Header (hidden on mobile) */}
         <div className="hidden border-b border-slate-200 p-5 lg:block">
-          <Link href="/admin" className="text-lg font-bold text-slate-900">
-            Admin<span className="text-teal-600">Panel</span>
+          <Link href="/admin" className="flex items-center gap-2 text-lg font-bold text-slate-900">
+            <img src="/logo.png" alt="Logo" className="h-8 w-8 object-contain" />
+            <span>Admin<span className="text-teal-600">Panel</span></span>
           </Link>
           <p className="mt-1 text-xs text-slate-500">Sri Siva Ganesh CMS</p>
         </div>

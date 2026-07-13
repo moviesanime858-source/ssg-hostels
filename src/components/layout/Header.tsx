@@ -30,9 +30,7 @@ export function Header({ contact }: { contact: ContactInfo }) {
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-600 text-lg font-bold text-white">
-            {firstWord.charAt(0)}
-          </span>
+          <img src="/logo.png" alt="SSG Hostels Logo" className="h-10 w-10 object-contain" />
           <span className="text-lg font-bold text-slate-900 tracking-tight">
             {firstWord} <span className="text-teal-600">{restWords}</span>
           </span>

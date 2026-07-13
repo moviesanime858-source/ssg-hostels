@@ -12,9 +12,9 @@ export function Footer({ contact }: { contact: ContactInfo }) {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-600 text-sm font-bold text-white">
-                {contact.hostelName.charAt(0)}
-              </span>
+              <div className="bg-white rounded-lg p-1 flex items-center justify-center">
+                <img src="/logo.png" alt="SSG Hostels Logo" className="h-8 w-8 object-contain" />
+              </div>
               <div className="flex flex-col">
                 <span className="font-bold text-white tracking-wide">{contact.hostelName}</span>
               </div>
